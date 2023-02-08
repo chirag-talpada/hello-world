@@ -20,7 +20,7 @@ app.get('/student/page/', async (req, res) => {
         const [results] = await con.execute(`SELECT * FROM student.student_master s,student.college_master c where s.college_id=c.college_id order by first_name,last_name asc limit ${pageSize} offset ${pageOffset};`);
         
 
-        let [next,prev]=[Number(pageNum)+1,Number(pageNum)-1]
+        let [next,prev]=[Number(pageNum)+1,Number(pageNum)]
 
         res.render('student', { results,next,prev,totalNumofPage});
         
