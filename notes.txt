@@ -1,0 +1,32 @@
+async function conn () {
+  const mysql = require('mysql2/promise');
+  const conn = await mysql.createConnection({ host:'localhost', user: 'root',  password: 'root',database: 'student' });
+  return conn
+}
+
+module.exports=conn;
+
+======================================
+
+app.get('/student/page/', async (req, res) => {
+
+    const pageSize=10;
+    let pageNum=req.query.page || 1;
+    let pageOffset=(pageSize*(pageNum-1)+1);
+    let totalNumofPage=0;
+    
+     try {
+        const con = await db();
+        const [results] = await con.execute(`SELECT * FROM student.student_master s,student.college_master c where s.college_id=c.college_id order by first_name,last_name asc limit ${pageSize} offset ${pageOffset};`);
+        
+
+        let [next,prev]=[Number(pageNum)+1,Number(pageNum)-1]
+
+        res.render('student', { results,next,prev,totalNumofPage});
+        
+    } catch (err) {
+        
+    }
+
+   
+})
