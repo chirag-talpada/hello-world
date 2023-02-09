@@ -1,32 +1,75 @@
-async function conn () {
-  const mysql = require('mysql2/promise');
-  const conn = await mysql.createConnection({ host:'localhost', user: 'root',  password: 'root',database: 'student' });
-  return conn
+
+
+let board_size=4;
+let q=[[2,1],[3,4]];
+
+let board=[]
+
+for(let i=1;i<=board_size;i++){
+    let arr=[]
+    for(let j=1;j<=board_size;j++){
+        if(i===q[0][0] && j===q[0][1] || i===q[1][0] && j===q[1][1]){
+            arr.push(`[q]`)    
+        }else{
+            arr.push(`[${i},${j}]`)
+        }
+    }
+    board.push(arr)
 }
 
-module.exports=conn;
-
-======================================
-
-app.get('/student/page/', async (req, res) => {
-
-    const pageSize=10;
-    let pageNum=req.query.page || 1;
-    let pageOffset=(pageSize*(pageNum-1));
-    let totalNumofPage=0;
-    
-     try {
-        const con = await db();
-        const [results] = await con.execute(`SELECT * FROM student.student_master s,student.college_master c where s.college_id=c.college_id order by first_name,last_name asc limit ${pageSize} offset ${pageOffset};`);
-        
-
-        let [next,prev]=[Number(pageNum)+1,Number(pageNum)-1]
-
-        res.render('student', { results,next,prev,totalNumofPage});
-        
-    } catch (err) {
-        
+for(let i=0;i<board_size;i++){
+    let r=0;
+    let c=0;
+    for(let j=0;j<board_size;j++){
+        if(board[i][j]==='[q]'){
+            r++;
+        }    
+        if(board[j][i]==='[q]'){
+            c++;
+        }
     }
+    
+    if(c>=2 || r>=2){
+        console.log(true)
+        break;
+    }
+    
+}
 
-   
-})
+
+let q_i=q[0][0]
+let q_j=q[0][1]
+
+let cross_left=0;
+
+while(1){
+    if(q_i>=board_size || q_j>=board_size){
+        break
+    }
+    if(board[q_i][q_j]==='[q]'){
+        cross_left++;
+    }
+    q_i++;
+    q_j++;
+}
+
+if(cross_left>=2){
+    console.log(true)
+}
+
+let cross_right=0;
+
+while(1){
+    if(q_i>0 || q_j>=board_size){
+        break
+    }
+    if(board[q_i][q_j]==='[q]'){
+        cross_left++;
+    }
+    q_i--;
+    q_j++;
+}
+
+if(cross_right>=2){
+    console.log(true)
+}
